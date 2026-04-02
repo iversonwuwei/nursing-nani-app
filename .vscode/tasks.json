@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run-nani-ios-simulator",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"781542BD-8FAE-4F3E-B528-ACDC7BD97951"
+			],
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "run-nani-ios-simulator",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run",
+				"-d",
+				"781542BD-8FAE-4F3E-B528-ACDC7BD97951"
+			],
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}
