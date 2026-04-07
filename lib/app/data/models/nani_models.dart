@@ -66,6 +66,7 @@ class CareExecutionFollowupDraft {
     required this.evidenceSummary,
     required this.note,
     required this.priority,
+    this.clockInSummary,
     this.exceptionNote,
   });
 
@@ -75,15 +76,61 @@ class CareExecutionFollowupDraft {
   final String evidenceSummary;
   final String note;
   final String priority;
+  final String? clockInSummary;
   final String? exceptionNote;
 
   String get handoverTopic => '$taskTitle 执行结果待下一班确认';
 
-  String get handoverDetail => '$evidenceSummary；执行备注：$note';
+  String get handoverDetail {
+    final segments = <String>[];
+    if (clockInSummary?.trim().isNotEmpty == true) {
+      segments.add('打卡摘要：${clockInSummary!.trim()}');
+    }
+    segments.add(evidenceSummary);
+    segments.add('执行备注：$note');
+    return segments.join('；');
+  }
 
   String get alertDetail => exceptionNote?.trim().isNotEmpty == true
       ? exceptionNote!.trim()
       : '$taskTitle 已完成，但需要继续人工确认异常或风险变化。';
+}
+
+class CareClockInDraft {
+  const CareClockInDraft({
+    required this.taskId,
+    required this.taskTitle,
+    required this.residentName,
+    required this.room,
+    required this.method,
+    required this.locationLabel,
+    required this.checkedInAtLabel,
+    required this.arrivalConfirmed,
+    this.exceptionNote,
+  });
+
+  final String taskId;
+  final String taskTitle;
+  final String residentName;
+  final String room;
+  final String method;
+  final String locationLabel;
+  final String checkedInAtLabel;
+  final bool arrivalConfirmed;
+  final String? exceptionNote;
+
+  String get summaryLabel {
+    final segments = <String>[
+      '$checkedInAtLabel 以$method完成打卡',
+      '位置 $locationLabel',
+    ];
+
+    if (exceptionNote?.trim().isNotEmpty == true) {
+      segments.add('异常说明：${exceptionNote!.trim()}');
+    }
+
+    return segments.join('；');
+  }
 }
 
 class CareTask {

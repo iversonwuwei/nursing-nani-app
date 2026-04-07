@@ -10,6 +10,7 @@ abstract class AppRoutes {
   static const schedule = '/schedule';
   static const handover = '/handover';
   static const handoff = '/handoff';
+  static const careCheckin = '/care-checkin';
   static const healthEntry = '/health-entry';
   static const careExecution = '/care-execution';
   static const aiAssist = '/ai-assist';

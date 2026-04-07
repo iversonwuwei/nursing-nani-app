@@ -306,8 +306,9 @@ class _TaskCard extends StatelessWidget {
               Expanded(
                 child: FilledButton(
                   key: ValueKey('task-open-care-execution-${task.id}'),
-                  onPressed: () => Get.toNamed(AppRoutes.careExecution, arguments: task.id),
-                  child: const Text('执行任务'),
+                  onPressed: () =>
+                      Get.toNamed(AppRoutes.careCheckin, arguments: task.id),
+                  child: const Text('服务打卡'),
                 ),
               ),
             ],

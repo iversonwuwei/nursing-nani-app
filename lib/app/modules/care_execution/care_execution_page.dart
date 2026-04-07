@@ -20,6 +20,7 @@ class CareExecutionController extends GetxController {
   final evidenceExceptionController = TextEditingController();
   final _formVersion = 0.obs;
   final submittedDraft = Rxn<CareExecutionFollowupDraft>();
+  CareClockInDraft? clockInDraft;
   late String taskId;
 
   final List<String> steps = const [
@@ -31,7 +32,20 @@ class CareExecutionController extends GetxController {
   @override
   void onInit() {
     final argument = Get.arguments;
-    taskId = argument is String ? argument : _service.todayTasks.first.id;
+    if (argument is String) {
+      taskId = argument;
+      clockInDraft = _service.findClockInDraft(taskId);
+    } else if (argument is Map<String, dynamic>) {
+      taskId = argument['taskId'] is String
+          ? argument['taskId'] as String
+          : _service.todayTasks.first.id;
+      clockInDraft = argument['clockInDraft'] is CareClockInDraft
+          ? argument['clockInDraft'] as CareClockInDraft
+          : _service.findClockInDraft(taskId);
+    } else {
+      taskId = _service.todayTasks.first.id;
+      clockInDraft = _service.findClockInDraft(taskId);
+    }
     noteController.addListener(_touchForm);
     evidenceExceptionController.addListener(_touchForm);
     super.onInit();
@@ -127,6 +141,7 @@ class CareExecutionController extends GetxController {
       evidenceSummary: evidenceSummary,
       note: noteController.text.trim(),
       priority: task.priority,
+      clockInSummary: clockInDraft?.summaryLabel,
       exceptionNote: evidenceExceptionController.text.trim().isEmpty
           ? null
           : evidenceExceptionController.text.trim(),
@@ -203,6 +218,40 @@ class CareExecutionView extends GetView<CareExecutionController> {
               key: ValueKey('care-task-header-${controller.task.id}'),
               task: controller.task,
             ),
+            if (controller.clockInDraft != null) ...[
+              const SizedBox(height: 12),
+              _ClockInContextCard(draft: controller.clockInDraft!),
+            ] else ...[
+              const SizedBox(height: 12),
+              SurfaceCard(
+                key: const ValueKey('care-clockin-missing-banner'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.info_outline_rounded,
+                          color: AppPalette.warning,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '当前未带入服务打卡摘要',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '主路径应先完成服务打卡；如果这是补录场景，可继续填写执行结果。',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
             const SectionHeader(
               title: '执行步骤',
@@ -444,6 +493,14 @@ class CareExecutionView extends GetView<CareExecutionController> {
                         ),
                         const SizedBox(height: 10),
                         Text('${draft.residentName} · ${draft.taskTitle}', style: Theme.of(context).textTheme.bodyLarge),
+                        if (draft.clockInSummary?.trim().isNotEmpty ==
+                            true) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            '打卡摘要：${draft.clockInSummary!}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
                         const SizedBox(height: 6),
                         Text(draft.evidenceSummary, style: Theme.of(context).textTheme.bodyMedium),
                         const SizedBox(height: 6),
@@ -638,6 +695,42 @@ class _TaskHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(task.nextAction, style: Theme.of(context).textTheme.bodyLarge),
+        ],
+      ),
+    );
+  }
+}
+
+class _ClockInContextCard extends StatelessWidget {
+  const _ClockInContextCard({required this.draft});
+
+  final CareClockInDraft draft;
+
+  @override
+  Widget build(BuildContext context) {
+    return SurfaceCard(
+      key: const ValueKey('care-clockin-context'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.fact_check_outlined, color: AppPalette.info),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '服务打卡已完成',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+              StatusChip(label: draft.method, color: AppPalette.info),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            draft.summaryLabel,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ],
       ),
     );

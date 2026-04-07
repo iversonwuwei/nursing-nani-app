@@ -1,6 +1,10 @@
 import 'package:nursing_nani_app/app/data/models/nani_models.dart';
 
 class MockNaniService {
+  MockNaniService();
+
+  final Map<String, CareClockInDraft> _clockInDrafts = {};
+
   final NaniUser defaultUser = const NaniUser(
     id: 'caregiver-001',
     name: '林晓雯',
@@ -630,5 +634,14 @@ class MockNaniService {
 
   int get unreadNotificationCount {
     return notifications.where((message) => !message.isRead).length;
+  }
+
+  CareClockInDraft? findClockInDraft(String taskId) {
+    return _clockInDrafts[taskId];
+  }
+
+  CareClockInDraft saveClockInDraft(CareClockInDraft draft) {
+    _clockInDrafts[draft.taskId] = draft;
+    return draft;
   }
 }

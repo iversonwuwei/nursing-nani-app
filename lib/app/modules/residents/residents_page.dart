@@ -128,8 +128,11 @@ class _ResidentCard extends StatelessWidget {
               Expanded(
                 child: FilledButton(
                   key: ValueKey('resident-open-care-execution-${resident.id}'),
-                  onPressed: () => Get.toNamed(AppRoutes.careExecution, arguments: linkedTaskId),
-                  child: const Text('护理执行'),
+                  onPressed: () => Get.toNamed(
+                    AppRoutes.careCheckin,
+                    arguments: linkedTaskId,
+                  ),
+                  child: const Text('服务打卡'),
                 ),
               ),
             ],

@@ -33,7 +33,9 @@ void main() {
     expect(find.byKey(const ValueKey('resident-detail-hero-resident-1')), findsOneWidget);
   });
 
-  testWidgets('opens health entry and care execution from residents page', (WidgetTester tester) async {
+  testWidgets('opens health entry and care check-in from residents page', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const NaniApp());
     await tester.pumpAndSettle();
 
@@ -57,7 +59,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('resident-open-care-execution-resident-1')), warnIfMissed: false);
     await tester.pumpAndSettle();
 
-    expect(find.text('护理执行'), findsOneWidget);
+    expect(find.text('服务打卡'), findsOneWidget);
     expect(find.text('晨间生命体征复测'), findsOneWidget);
   });
 
@@ -224,8 +226,11 @@ void main() {
     Get.toNamed(AppRoutes.careExecution, arguments: 'task-1');
     await tester.pumpAndSettle();
 
+    await tester.ensureVisible(find.byKey(const ValueKey('care-step-0')));
     await tester.tap(find.byKey(const ValueKey('care-step-0')), warnIfMissed: false);
+    await tester.ensureVisible(find.byKey(const ValueKey('care-step-1')));
     await tester.tap(find.byKey(const ValueKey('care-step-1')), warnIfMissed: false);
+    await tester.ensureVisible(find.byKey(const ValueKey('care-step-2')));
     await tester.tap(find.byKey(const ValueKey('care-step-2')), warnIfMissed: false);
     await tester.pumpAndSettle();
 
@@ -260,8 +265,11 @@ void main() {
     expect(find.byKey(const ValueKey('care-evidence-slot-feeding-position')), findsOneWidget);
     expect(find.byKey(const ValueKey('care-evidence-slot-feeding-supplies')), findsOneWidget);
 
+      await tester.ensureVisible(find.byKey(const ValueKey('care-step-0')));
     await tester.tap(find.byKey(const ValueKey('care-step-0')), warnIfMissed: false);
+      await tester.ensureVisible(find.byKey(const ValueKey('care-step-1')));
     await tester.tap(find.byKey(const ValueKey('care-step-1')), warnIfMissed: false);
+      await tester.ensureVisible(find.byKey(const ValueKey('care-step-2')));
     await tester.tap(find.byKey(const ValueKey('care-step-2')), warnIfMissed: false);
     await tester.pumpAndSettle();
 
@@ -306,8 +314,11 @@ void main() {
     Get.toNamed(AppRoutes.careExecution, arguments: 'task-2');
     await tester.pumpAndSettle();
 
+      await tester.ensureVisible(find.byKey(const ValueKey('care-step-0')));
     await tester.tap(find.byKey(const ValueKey('care-step-0')), warnIfMissed: false);
+      await tester.ensureVisible(find.byKey(const ValueKey('care-step-1')));
     await tester.tap(find.byKey(const ValueKey('care-step-1')), warnIfMissed: false);
+      await tester.ensureVisible(find.byKey(const ValueKey('care-step-2')));
     await tester.tap(find.byKey(const ValueKey('care-step-2')), warnIfMissed: false);
     await tester.enterText(find.byKey(const ValueKey('care-note-input')), '鼻饲后耐受平稳，已准备交接。');
 

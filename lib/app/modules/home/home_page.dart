@@ -434,6 +434,15 @@ class _QuickActionGrid extends StatelessWidget {
         AppRoutes.handover,
       ),
       (
+        'care-checkin',
+        '服务打卡',
+        '先完成到场确认，再进入护理执行与留证',
+        '打卡',
+        Icons.fact_check_rounded,
+        AppPalette.info,
+        AppRoutes.careCheckin,
+      ),
+      (
         'schedule',
         '我的排班',
         '查看班次区域、备注和后续安排',
@@ -514,8 +523,8 @@ class _TaskPreviewCard extends StatelessWidget {
           const SizedBox(height: 14),
           FilledButton(
             key: ValueKey('home-open-care-task-${task.id}'),
-            onPressed: () => Get.toNamed(AppRoutes.careExecution, arguments: task.id),
-            child: const Text('进入执行页'),
+            onPressed: () => Get.toNamed(AppRoutes.careCheckin, arguments: task.id),
+            child: const Text('先去打卡'),
           ),
         ],
       ),
